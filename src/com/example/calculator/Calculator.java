@@ -4,8 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Calculator {
-    List<String> history;
-    StringBuilder sb;
+    private List<String> history;
+    private StringBuilder sb;
 
     public Calculator(){
         history = new LinkedList<>();
@@ -96,5 +96,21 @@ public class Calculator {
         if(history.isEmpty())
             return "";
         return history.get(history.size()-1);
+    }
+
+    public List<String> getAllHistory(){
+        return history;
+    }
+
+    public String deleteFirstHistory(){
+        String first = history.get(0);
+        history.remove(0);
+        return first;
+    }
+
+    public int clearHistory(){
+        int size = history.size();
+        history.clear();
+        return size;
     }
 }

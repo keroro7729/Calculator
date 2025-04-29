@@ -38,8 +38,33 @@ public class App {
 
             System.out.println("결과: "+calculator.calculate(a, b, oper));
 
-            System.out.println("더 계산하시켔습니까? (exit 입력 시 종료)");
-            if(scan.next().equals("exit")) break;
+            System.out.println("더 계산하시켔습니까? (continue, exit, history)");
+            input = scan.next();
+            if(input.equals("exit")) break;
+            else if(input.equals("history")){
+                System.out.println("명령어를 입력하세요. (show, last, clear, pop)");
+                switch(scan.next()){
+                    case "show":
+                        for(String h : calculator.getAllHistory())
+                            System.out.println(h);
+                        break;
+                    case "last":
+                        System.out.println(calculator.getLastHistory());
+                        break;
+                    case "clear":
+                        System.out.println("cleared "+calculator.clearHistory()+" history");
+                        break;
+                    case "pop":
+                        System.out.println("pop: "+calculator.deleteFirstHistory());
+                        break;
+                    default:
+                        System.out.println("올바른 히스토리 명령어를 입력해주세요.");
+                        System.out.println("show: 모든 히스토리 보기");
+                        System.out.println("last: 최근 히스토리 보기");
+                        System.out.println("clear: 모든 히스토리 삭제");
+                        System.out.println("pop: 가장 오래된 히스토리 삭제");
+                }
+            }
         }
     }
 
