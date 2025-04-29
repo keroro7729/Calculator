@@ -1,93 +1,100 @@
 package com.example.calculator;
 
-import java.util.Scanner;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Calculator {
-    public static void main(String[] args){
-        Scanner scan = new Scanner(System.in);
-        long a, b;
-        char oper;
-        String result = "", input;
+    List<String> history;
+    StringBuilder sb;
 
-        while(true) {
-            while(true) {
-                System.out.print("첫 번째 숫자를 입력하세요: ");
-                input = scan.next();
-                if(isPositiveInteger(input)) {
-                    a = Long.parseLong(input);
-                    break;
-                }
-                else{
-                    System.out.println("양의 정수를 입력하세요.");
-                }
-            }
-            while(true) {
-                System.out.print("두 번째 숫자를 입력하세요: ");
-                input = scan.next();
-                if(isPositiveInteger(input)) {
-                    b = Long.parseLong(input);
-                    break;
-                }
-                else{
-                    System.out.println("양의 정수를 입력하세요.");
-                }
-            }
-            System.out.print("사칙연산 기호를 입력하세요: ");
-            oper = scan.next().charAt(0);
+    public Calculator(){
+        history = new LinkedList<>();
+    }
 
-            result = "";
-            switch (oper) {
-                case '+':
-                    result = add(a, b);
-                    break;
-                case '-':
-                    result = subtract(a, b);
-                    break;
-                case '*':
-                    result = multiply(a, b);
-                    break;
-                case '/':
-                    result = divide(a, b);
-                    break;
-                default:
-                    result = "사칙연산 기호를 입력하세요. (+, -, *, /)";
-            }
-            System.out.println("결과: "+result);
-
-            System.out.println("더 계산하시켔습니까? (exit 입력 시 종료)");
-            if(scan.next().equals("exit")) break;
+    public Long add(long a, long b){
+        sb = new StringBuilder();
+        sb.append(a).append('+').append(b).append('=');
+        if(a > Long.MAX_VALUE - b) {
+            sb.append("overflow error");
+            history.add(sb.toString());
+            return null;
+        }
+        else {
+            sb.append(a + b);
+            history.add(sb.toString());
+            return a + b;
         }
     }
 
-    private static String add(long a, long b){
-        if(a > Long.MAX_VALUE - b){
-            return "add() overflow error";
+    public Long subtract(long a, long b){
+        sb = new StringBuilder();
+        sb.append(a).append('-').append(b).append('=').append(a-b);
+        history.add(sb.toString());
+        return a - b;
+    }
+
+    public Long multiply(long a, long b){
+        sb = new StringBuilder();
+        sb.append(a).append('*').append(b).append('=');
+        if(b != 0 && a > Long.MAX_VALUE / b) {
+            sb.append("overflow error");
+            history.add(sb.toString());
+            return null;
         }
-        return String.valueOf(a + b);
-    }
-    private static String subtract(long a, long b){
-        return String.valueOf(a - b);
-    }
-    private static String multiply(long a, long b){
-        if(b != 0 && a > Long.MAX_VALUE / b){
-            return "multiply() overflow error!";
+        else {
+            sb.append(a * b);
+            history.add(sb.toString());
+            return a * b;
         }
-        return String.valueOf(a * b);
     }
-    private static String divide(long a, long b){
+
+    public Double divide(long a, long b){
+        sb = new StringBuilder();
+        sb.append(a).append('/').append(b).append('=');
         if(b == 0) {
-            return "나눗셈 연산에서 분모(두번째 정수)에 0이 입력될 수 없습니다.";
+            sb.append("divide by zero error");
+            history.add(sb.toString());
+            return null;
         }
-        else return String.valueOf((double) a / b);
+        else {
+            sb.append((double)a / b);
+            history.add(sb.toString());
+            return (double)a / b;
+        }
     }
 
-    private static boolean isPositiveInteger(String input){
-        char c;
-        for(int i=0; i<input.length(); i++){
-            c = input.charAt(i);
-            if(c < '0' || '9' < c)
-                return false;
+    public String calculate(long a, long b, char oper){
+        Long longResult;
+        Double doubleResult;
+        switch (oper){
+            case '+':
+                longResult = add(a, b);
+                if(longResult == null)
+                    return getLastHistory();
+                else return longResult.toString();
+            case '-':
+                longResult = subtract(a, b);
+                if(longResult == null)
+                    return getLastHistory();
+                else return longResult.toString();
+            case '*':
+                longResult = multiply(a, b);
+                if(longResult == null)
+                    return getLastHistory();
+                else return longResult.toString();
+            case '/':
+                doubleResult = divide(a, b);
+                if(doubleResult == null)
+                    return getLastHistory();
+                else return doubleResult.toString();
+            default:
+                return "unknown operator error";
         }
-        return true;
+    }
+
+    public String getLastHistory(){
+        if(history.isEmpty())
+            return "";
+        return history.get(history.size()-1);
     }
 }
