@@ -6,21 +6,34 @@ public class Calculator {
     public static void main(String[] args){
         Scanner scan = new Scanner(System.in);
 
-        System.out.print("첫 번째 숫자를 입력하세요: ");
-        long a = scan.nextLong();
-        System.out.print("두 번째 숫자를 입력하세요: ");
-        long b = scan.nextLong();
-        System.out.print("사칙연산 기호를 입력하세요: ");
-        char oper = scan.next().charAt(0);
+        while(true) {
+            System.out.print("첫 번째 숫자를 입력하세요: ");
+            long a = scan.nextLong();
+            System.out.print("두 번째 숫자를 입력하세요: ");
+            long b = scan.nextLong();
+            System.out.print("사칙연산 기호를 입력하세요: ");
+            char oper = scan.next().charAt(0);
 
-        String result = "";
-        switch(oper){
-            case '+': result = add(a, b); break;
-            case '-': result = subtract(a, b); break;
-            case '*': result = multiply(a, b); break;
-            case '/': result = divide(a, b); break;
+            String result = "";
+            switch (oper) {
+                case '+':
+                    result = add(a, b);
+                    break;
+                case '-':
+                    result = subtract(a, b);
+                    break;
+                case '*':
+                    result = multiply(a, b);
+                    break;
+                case '/':
+                    result = divide(a, b);
+                    break;
+            }
+            System.out.println("결과: "+result);
+
+            System.out.println("더 계산하시켔습니까? (exit 입력 시 종료)");
+            if(scan.next().equals("exit")) break;
         }
-        System.out.println(result);
     }
 
     private static String add(long a, long b){
