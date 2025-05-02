@@ -2,37 +2,55 @@ package com.example.calculator;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Calculator {
-    private final List<Double> history;
+    private final List<Number> history;
 
     public Calculator(){
         history = new LinkedList<>();
     }
 
-    private <A extends Number, B extends Number> Double add(A a, B b){
-        double result = a.doubleValue() + b.doubleValue();
+    private <A extends Number, B extends Number> Number add(A a, B b){
+        Number result;
+        if(a instanceof Long && b instanceof Long){
+            result = a.longValue() + b.longValue();
+        }
+        else{
+            result = a.doubleValue() + b.doubleValue();
+        }
         history.add(result);
         return result;
     }
 
-    private <A extends Number, B extends Number> Double subtract(A a, B b){
-        double result = a.doubleValue() - b.doubleValue();
+    private <A extends Number, B extends Number> Number subtract(A a, B b){
+        Number result;
+        if(a instanceof Long && b instanceof Long){
+            result = a.longValue() - b.longValue();
+        }
+        else{
+            result = a.doubleValue() - b.doubleValue();
+        }
+        return result;
+    }
+
+    private <A extends Number, B extends Number> Number multiply(A a, B b){
+        Number result;
+        if(a instanceof Long && b instanceof Long){
+            result = a.longValue() * b.longValue();
+        }
+        else{
+            result = a.doubleValue() * b.doubleValue();
+        }
         history.add(result);
         return result;
     }
 
-    private <A extends Number, B extends Number> Double multiply(A a, B b){
-        double result = a.doubleValue() * b.doubleValue();
-        history.add(result);
-        return result;
-    }
-
-    private <A extends Number, B extends Number> Double divide(A a, B b) throws DivideByZeroException {
-        if(b.doubleValue() == 0){
+    private <A extends Number, B extends Number> Number divide(A a, B b) throws DivideByZeroException {
+        if(b.doubleValue() == 0.0){
             throw new DivideByZeroException("divide by zero error: "+a+" / "+b);
         }
-        double result = a.doubleValue() / b.doubleValue();
+        Number result = a.doubleValue() / b.doubleValue();;
         history.add(result);
         return result;
     }
@@ -52,19 +70,19 @@ public class Calculator {
         }
     }
 
-    public List<Double> getHistory(){
+    public List<Number> getHistory(){
         return history;
     }
 
-    public List<Double> historyOver(int n){
+    public List<Number> historyOver(int n){
         return history.stream()
-                .filter(v -> v > n)
-                .toList();
+                .filter(v -> v.longValue() > n)
+                .collect(Collectors.toList());
     }
 
-    public List<Double> historyUnder(int n){
+    public List<Number> historyUnder(int n){
         return history.stream()
-                .filter(v -> v < n)
-                .toList();
+                .filter(v -> v.longValue() < n)
+                .collect(Collectors.toList());
     }
 }
